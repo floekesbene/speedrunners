@@ -424,6 +424,26 @@ function CFrame.Angles(rx, ry, rz)
 	return cfMul(cfMul(Rx, Ry), Rz)
 end
 CFrame.fromEulerAnglesXYZ = CFrame.Angles
+function CFrame.fromOrientation(rx, ry, rz)
+	-- Roblox: Reihenfolge Y, X, Z
+	local cx, sx = math.cos(rx), math.sin(rx)
+	local cy, sy = math.cos(ry), math.sin(ry)
+	local cz, sz = math.cos(rz), math.sin(rz)
+	local Rx = cf(0, 0, 0, 1, 0, 0, 0, cx, -sx, 0, sx, cx)
+	local Ry = cf(0, 0, 0, cy, 0, sy, 0, 1, 0, -sy, 0, cy)
+	local Rz = cf(0, 0, 0, cz, -sz, 0, sz, cz, 0, 0, 0, 1)
+	return cfMul(cfMul(Ry, Rx), Rz)
+end
+CFrame.fromEulerAnglesYXZ = CFrame.fromOrientation
+function CFrame.fromAxisAngle(axis, angle)
+	local u = axis.Unit
+	local c, s = math.cos(angle), math.sin(angle)
+	local t = 1 - c
+	return cf(0, 0, 0,
+		t * u.X * u.X + c, t * u.X * u.Y - s * u.Z, t * u.X * u.Z + s * u.Y,
+		t * u.X * u.Y + s * u.Z, t * u.Y * u.Y + c, t * u.Y * u.Z - s * u.X,
+		t * u.X * u.Z - s * u.Y, t * u.Y * u.Z + s * u.X, t * u.Z * u.Z + c)
+end
 function CFrame.Inverse(c)
 	return cfInverse(c)
 end
@@ -467,6 +487,28 @@ function Color3.fromHSV(h, s, v)
 end
 function Color3.Lerp(a, b, t)
 	return Color3.new(a.R + (b.R - a.R) * t, a.G + (b.G - a.G) * t, a.B + (b.B - a.B) * t)
+end
+function Color3.fromHex(hex)
+	hex = hex:gsub("#", "")
+	return Color3.fromRGB(tonumber(hex:sub(1, 2), 16) or 0, tonumber(hex:sub(3, 4), 16) or 0, tonumber(hex:sub(5, 6), 16) or 0)
+end
+function Color3.ToHSV(c)
+	local max, min = math.max(c.R, c.G, c.B), math.min(c.R, c.G, c.B)
+	local h = 0
+	if max ~= min then
+		if max == c.R then
+			h = ((c.G - c.B) / (max - min)) % 6
+		elseif max == c.G then
+			h = (c.B - c.R) / (max - min) + 2
+		else
+			h = (c.R - c.G) / (max - min) + 4
+		end
+		h /= 6
+	end
+	return h, if max == 0 then 0 else (max - min) / max, max
+end
+function Color3.ToHex(c)
+	return string.format("%02X%02X%02X", math.floor(c.R * 255 + 0.5), math.floor(c.G * 255 + 0.5), math.floor(c.B * 255 + 0.5))
 end
 
 -- UDim / UDim2
@@ -515,6 +557,16 @@ local NumberRange = simpleType("NumberRange", { "Min", "Max" })
 local PhysicalProperties = simpleType("PhysicalProperties", { "Density", "Friction", "Elasticity" })
 local TweenInfo = simpleType("TweenInfo", { "Time", "EasingStyle", "EasingDirection" })
 local Rect = simpleType("Rect", { "Min", "Max" })
+local Font = simpleType("Font", { "Family", "Weight", "Style" })
+function Font.fromEnum(e)
+	return Font.new(tostring(e))
+end
+function Font.fromName(name, weight, style)
+	return Font.new(name, weight, style)
+end
+function Font.fromId(id, weight, style)
+	return Font.new(tostring(id), weight, style)
+end
 
 -- Random
 local Random = {}
@@ -1093,6 +1145,27 @@ ClassMethods.Humanoid = {
 	end,
 }
 
+-- Terrain (Füllungen werden nur gezählt)
+Mock.TerrainFills = 0
+local function terrainFill()
+	Mock.TerrainFills += 1
+end
+ClassMethods.Terrain = {
+	FillBlock = terrainFill,
+	FillBall = terrainFill,
+	FillCylinder = terrainFill,
+	FillWedge = terrainFill,
+	FillRegion = terrainFill,
+	ReplaceMaterial = terrainFill,
+	Clear = function() end,
+	WorldToCell = function(_, p)
+		return p
+	end,
+	CellCenterToWorld = function(_, x, y, z)
+		return v3(x, y, z)
+	end,
+}
+
 -- Camera
 ClassMethods.Camera = {
 	WorldToViewportPoint = function(camera, position)
@@ -1634,6 +1707,7 @@ local envBase = {
 	PhysicalProperties = PhysicalProperties,
 	TweenInfo = TweenInfo,
 	Rect = Rect,
+	Font = Font,
 	Random = Random,
 	RaycastParams = RaycastParams,
 	OverlapParams = OverlapParams,

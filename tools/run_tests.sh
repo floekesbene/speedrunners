@@ -36,6 +36,10 @@ echo "   … Import-Variante: Modell in frischen Place einfügen, Installer ausf
 python3 tools/gen_tree.py "$TMP/import_tree.luau" import.project.json > /dev/null
 "$RUNNER" --run tools/test/import_test.luau "$PWD" "$TMP/import_tree.luau" | grep -E "Ergebnis|✗|RUN"
 
+if [ "${SKIP_BUILD:-0}" = "1" ]; then
+	echo "== 6/6 Build übersprungen (SKIP_BUILD=1)"
+	exit 0
+fi
 echo "== 6/6 Roblox-Dateien bauen"
 mkdir -p build
 rojo build default.project.json -o build/VelocityRush.rbxl         # Place (binär) – direkt öffnen
