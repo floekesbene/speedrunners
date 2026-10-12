@@ -98,7 +98,7 @@ function MapBuilder.new(params)
 	self.Thickness = 8
 	self.NoPitHazard = false
 	self.AutoCheckpoints = true
-	self.CheckpointSpacing = 200
+	self.CheckpointSpacing = 140
 	self.LastCheckpointX = -math.huge
 
 	self.MinX, self.MaxX, self.MinY, self.MaxY = 0, 0, 0, 0

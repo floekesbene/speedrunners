@@ -1,0 +1,4 @@
+std = "tools/roblox_min"
+
+[lints]
+shadowing = "allow"

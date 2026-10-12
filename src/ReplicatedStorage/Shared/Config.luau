@@ -111,11 +111,11 @@ Config.Grapple = {
 
 -- Gefahrenzone: eine Energiewand, die dem Führenden in festem Abstand folgt.
 Config.HazardZone = {
-	WarningStart = 8, -- ab Sekunde X nach Rennstart Warnung
-	ShrinkStart = 14, -- ab Sekunde X wird die Zone gefährlich und schrumpft
-	ShrinkDuration = 50,
-	InitialLength = 220, -- Abstand der Wand zum Führenden zu Beginn
-	FinalLength = 55, -- minimaler Abstand im Endzustand
+	WarningStart = 10, -- ab Sekunde X nach Rennstart Warnung
+	ShrinkStart = 18, -- ab Sekunde X wird die Zone gefährlich und schrumpft
+	ShrinkDuration = 55,
+	InitialLength = 260, -- Abstand der Wand zum Führenden zu Beginn
+	FinalLength = 60, -- minimaler Abstand im Endzustand
 	EliminationDelay = 1.6, -- so lange darf man hinter der Wand sein
 	RecoveryRate = 2, -- Abbau der Gefahrenzeit pro Sekunde in Sicherheit
 }

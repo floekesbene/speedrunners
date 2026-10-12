@@ -373,7 +373,7 @@ function Components.Tabs(props)
 		Parent = props.Parent,
 	}, { Components.List(Enum.FillDirection.Horizontal, 6) })
 	local buttons = {}
-	local function select(name: string)
+	local function selectTab(name: string)
 		for tabName, button in buttons do
 			local active = tabName == name
 			Components.SetButtonColor(button, if active then Theme.Colors.Accent else Theme.Colors.PanelLight)
@@ -390,13 +390,13 @@ function Components.Tabs(props)
 			TextSize = Theme.TextSize.Small,
 			LayoutOrder = index,
 			OnClick = function()
-				select(tab.Name)
+				selectTab(tab.Name)
 			end,
 		})
 		button.Parent = frame
 		buttons[tab.Name] = button
 	end
-	return frame, select
+	return frame, selectTab
 end
 
 --- Modales Fenster mit Titel und Schließen-Button.

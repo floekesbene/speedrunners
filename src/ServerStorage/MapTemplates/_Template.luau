@@ -13,7 +13,7 @@
 	Regeln für faire, spielbare Strecken:
 		- Normale Sprunglücken ≤ 18 Studs, Stufen ≤ 6 Studs.
 		- Greifhaken-Lücken 40–80 Studs, Anker ca. 22–26 Studs über dem Boden.
-		- Alle ~200 Studs wird automatisch ein Checkpoint gesetzt.
+		- Alle ~140 Studs wird automatisch ein Checkpoint gesetzt.
 		- Immer mit B:Start() beginnen und mit B:Finish() enden.
 		- Zum Schluss B:Decorate() für den Hintergrund aufrufen.
 

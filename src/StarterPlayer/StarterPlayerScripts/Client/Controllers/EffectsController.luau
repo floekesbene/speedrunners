@@ -522,8 +522,8 @@ function EffectsController:_update(dt: number)
 	local t = os.clock()
 	local serverNow = workspace:GetServerTimeNow()
 	local movement = self.Ctx.MovementController
-	local camera = workspace.CurrentCamera
-	local cameraPosition = if camera then camera.CFrame.Position else Vector3.zero
+	local currentCamera = workspace.CurrentCamera
+	local cameraPosition = if currentCamera then currentCamera.CFrame.Position else Vector3.zero
 	local alive = {}
 
 	-- Spielfiguren: Seile und Status

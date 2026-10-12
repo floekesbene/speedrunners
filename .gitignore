@@ -1,0 +1,5 @@
+tools/luau-runner/target/
+tools/luau-runner/Cargo.lock
+tools/test/_tree.luau
+*.rbxl.lock
+*.rbxlx.lock

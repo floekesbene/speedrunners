@@ -387,7 +387,9 @@ function CharacterService:Tick(_dt: number)
 		local root = self:GetRoot(player)
 		if profileLoaded and (not character or not root or not character.Parent) then
 			self:Spawn(player)
-		elseif root and lobby and self:GetRegion(player) == "Lobby" then
+		elseif root and lobby and player:GetAttribute("InRace") ~= true and self:GetRegion(player) == "Lobby" then
+			-- (Spieler mit InRace = true stehen noch auf der Strecke: Siegerehrung bzw.
+			-- kurze Pause nach dem Ausscheiden – RoundService holt sie selbst zurück.)
 			local position = root.Position
 			if position.Y < lobby.KillY or math.abs(position.X - Config.World.LobbyOrigin.X) > 1500 then
 				self:SendToLobby(player)
