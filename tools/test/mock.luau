@@ -1188,6 +1188,9 @@ ClassMethods.Player = {
 	GetMouse = function()
 		return {}
 	end,
+	RequestStreamAroundAsync = function()
+		task.wait(0.1)
+	end,
 }
 
 -- Tween
@@ -1358,6 +1361,9 @@ service("StarterGui", {
 	end,
 })
 service("Lighting")
+service("ChangeHistoryService", {
+	SetWaypoint = function() end,
+})
 service("SoundService")
 service("TextChatService")
 service("GuiService")
@@ -1696,6 +1702,7 @@ end
 Mock.MakeEnv = makeEnv
 
 function Mock.BuildTree(tree)
+	local lastRoot = nil
 	local function build(node, parent)
 		local obj
 		if node.Class == "DataModel" then
@@ -1715,11 +1722,15 @@ function Mock.BuildTree(tree)
 		if obj ~= game and rawget(obj, "_props").Parent ~= parent then
 			setParent(obj, parent)
 		end
+		if parent == nil then
+			lastRoot = obj
+		end
 		for _, child in node.Children or {} do
 			build(child, obj)
 		end
 	end
 	build(tree, nil)
+	Mock.LastBuiltRoot = lastRoot
 	-- StarterPlayerScripts / StarterCharacterScripts sicherstellen
 	for _, name in { "StarterPlayerScripts", "StarterCharacterScripts" } do
 		if not starterPlayer:FindFirstChild(name) then

@@ -1,0 +1,57 @@
+{
+  "name": "VelocityRush_Import",
+  "tree": {
+    "$className": "Folder",
+
+    "Install": {
+      "$path": "tools/installer/Install.luau"
+    },
+
+    "ReplicatedStorage": {
+      "$className": "Folder",
+      "Shared": {
+        "$path": "src/ReplicatedStorage/Shared"
+      }
+    },
+
+    "ServerScriptService": {
+      "$className": "Folder",
+      "Server": {
+        "$className": "Folder",
+        "Bootstrap": {
+          "$path": "src/ServerScriptService/Server/Bootstrap.server.luau",
+          "$properties": {
+            "Disabled": true
+          }
+        },
+        "Modules": {
+          "$path": "src/ServerScriptService/Server/Modules"
+        },
+        "Services": {
+          "$path": "src/ServerScriptService/Server/Services"
+        }
+      }
+    },
+
+    "ServerStorage": {
+      "$className": "Folder",
+      "MapTemplates": {
+        "$path": "src/ServerStorage/MapTemplates"
+      }
+    },
+
+    "StarterPlayerScripts": {
+      "$className": "Folder",
+      "Client": {
+        "$path": "src/StarterPlayer/StarterPlayerScripts/Client"
+      }
+    },
+
+    "StarterCharacterScripts": {
+      "$className": "Folder",
+      "Animate": {
+        "$path": "src/StarterPlayer/StarterCharacterScripts/Animate.client.luau"
+      }
+    }
+  }
+}

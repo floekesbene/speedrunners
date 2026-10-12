@@ -96,6 +96,7 @@ local function newState()
 		GrappleCooldownUntil = 0,
 		LastPadTime = 0,
 		PendingImpulse = 0,
+		StreamWaitUntil = 0,
 		SentState = "",
 		SentFacing = 0,
 		LastSent = 0,
@@ -127,6 +128,11 @@ function MovementController:Init(ctx)
 			self:_releaseGrapple(false, true, 0, 0)
 		end
 	end)
+
+	local okStreaming, streaming = pcall(function()
+		return workspace.StreamingEnabled
+	end)
+	self.Streaming = okStreaming and streaming == true
 
 	self.Params = RaycastParams.new()
 	self.Params.FilterType = Enum.RaycastFilterType.Exclude
@@ -209,6 +215,7 @@ end
 
 function MovementController:_onTeleported()
 	local S = self.S
+	S.StreamWaitUntil = os.clock() + 3
 	S.Grapple = nil
 	S.DashUntil = 0
 	S.JumpBufferUntil = 0
@@ -457,6 +464,16 @@ function MovementController:_step(rawDt: number)
 
 	-- Sensoren
 	local groundHit = self:_groundCheck(position)
+
+	-- StreamingEnabled: nach Teleports schweben, bis der Boden geladen ist
+	if self.Streaming and now < S.StreamWaitUntil and not groundHit then
+		if not workspace:Raycast(position, Vector3.new(0, -250, 0), self.Params) then
+			root.AssemblyLinearVelocity = Vector3.new(0, 0, vz)
+			root.AssemblyAngularVelocity = Vector3.zero
+			self.Velocity = Vector3.zero
+			return
+		end
+	end
 	local grounded = groundHit ~= nil and (now - S.LastJumpTime) > 0.12
 	if grounded then
 		if not S.Grounded and S.MinAirVy < -45 then

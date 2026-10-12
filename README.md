@@ -8,7 +8,8 @@ Inspiriert vom Gameplay-Prinzip kompetitiver Side-Scrolling-Racer. Alle Namen, S
 Effekte und Oberflächen sind eigenständig. Es werden **keine externen Assets** benötigt: alles besteht aus
 Roblox-Parts, Farben, Materialien, Partikeln und Roblox-eigenen Standard-Sounds.
 
-> **Die komplette Spieldatei:** [`build/VelocityRush.rbxlx`](build/VelocityRush.rbxlx) – direkt in Roblox Studio öffnen.
+> **Die komplette Spieldatei:** [`build/VelocityRush.rbxl`](build/VelocityRush.rbxl) – direkt in Roblox Studio öffnen.
+> Zum Einfügen in einen bestehenden Place: [`build/VelocityRush_Import.rbxm`](build/VelocityRush_Import.rbxm).
 
 ---
 
@@ -35,15 +36,45 @@ Roblox-Parts, Farben, Materialien, Partikeln und Roblox-eigenen Standard-Sounds.
 
 ## 1. Schnellstart
 
-1. **Roblox Studio** öffnen → *Datei → Öffnen* → `build/VelocityRush.rbxlx` auswählen.
-2. Oben auf **Play** (F5) klicken. Du startest in der Lobby.
+Es gibt drei gleichwertige Dateien im Ordner `build/` – du brauchst nur **eine** davon.
+
+| Datei | Wofür | So geht's |
+|---|---|---|
+| **`VelocityRush.rbxl`** (empfohlen) | komplettes Spiel als Place | Roblox Studio → *Datei → Öffnen* (bzw. Startseite → *Datei öffnen*) → Datei wählen → **Play** |
+| `VelocityRush.rbxlx` | dasselbe als Text-Datei (XML) | wie oben |
+| `VelocityRush_Import.rbxm` | in einen **bestehenden** Place importieren | siehe unten |
+
+### Variante A – Place öffnen (am einfachsten)
+1. `build/VelocityRush.rbxl` herunterladen (auf GitHub: Datei anklicken → *Download raw file*).
+2. **Roblox Studio** öffnen → *Datei → Öffnen* → `VelocityRush.rbxl` wählen.
+3. Oben auf **Play** (F5) klicken. Du startest in der Lobby.
    - In Studio darf ein Rennen auch **allein** starten (`Config.Debug.AllowSoloRace`), damit du sofort testen kannst.
    - Klicke **SCHNELLES SPIEL** → nach 10 s Countdown startet das Rennen.
-3. Für echte Mehrspieler-Tests: Reiter **Test → Clients und Server**, z. B. *2 Spieler* oder *3 Spieler*, **Start**.
-4. **Speichern aktivieren** (optional, für Coins/XP/Skins über Sitzungen hinweg):
-   *Datei → In Roblox veröffentlichen*, danach *Spieleinstellungen → Sicherheit →
-   „Studiozugriff auf API-Dienste aktivieren“*. Ohne diese Einstellung läuft das Spiel normal,
-   speichert aber nicht (Hinweis im Spiel und in der Statistik).
+
+### Variante B – in einen bestehenden Place importieren
+1. Place in Roblox Studio öffnen (z. B. neue *Baseplate*).
+2. Im **Explorer** mit Rechtsklick auf **Workspace** → *Aus Datei einfügen …* (Insert from File)
+   → `VelocityRush_Import.rbxm` wählen. Es erscheint `Workspace/VelocityRush_Import`.
+3. **Ansicht → Befehlsleiste** öffnen und diese Zeile einfügen und mit Enter ausführen:
+   ```lua
+   require(workspace.VelocityRush_Import.Install)()
+   ```
+   Der Installer verschiebt alles in die richtigen Services, setzt die Einstellungen
+   (CharacterAutoLoads aus, Schwerkraft 200 …), entfernt Baseplate und SpawnLocation (sie liegen im
+   Bereich der Rennstrecke) und löscht sich danach selbst. Im Output steht „Velocity Rush wurde installiert!“.
+4. Falls der Output darum bittet: *Workspace* auswählen und im Eigenschaften-Fenster **StreamingEnabled**
+   ausschalten (empfohlen; das Spiel funktioniert aber auch mit Streaming).
+5. **Play** drücken.
+
+Solange der Installer nicht ausgeführt wurde, ist das Server-Script im Modell deaktiviert – es kann also nichts
+versehentlich am falschen Ort starten.
+
+### Danach
+- Für echte Mehrspieler-Tests: Reiter **Test → Clients und Server**, z. B. *2 Spieler* oder *3 Spieler*, **Start**.
+- **Speichern aktivieren** (optional, für Coins/XP/Skins über Sitzungen hinweg):
+  *Datei → In Roblox veröffentlichen*, danach *Spieleinstellungen → Sicherheit →
+  „Studiozugriff auf API-Dienste aktivieren“*. Ohne diese Einstellung läuft das Spiel normal,
+  speichert aber nicht (Hinweis im Spiel und in der Statistik).
 
 Es müssen **keine** Instanzen manuell angelegt werden. Lobby, Strecken, Spielfigur, Remotes und die gesamte
 Benutzeroberfläche werden beim Start per Script erzeugt. Deshalb ist der Workspace im Bearbeitungsmodus leer –
@@ -401,7 +432,11 @@ Kein Pay-to-Win: Items gibt es nur im Spiel aus Boxen.
    gemeinsam; simulierte Spieler treten bei, kaufen ein, trainieren, spielen Quick-Play- und Ranked-Rennen,
    verlassen mitten im Rennen, der Server fährt herunter. **Ergebnis: 75 von 75 Prüfungen bestanden,
    0 Laufzeitfehler.**
-6. **Build** der Place-Datei mit Rojo.
+6. **Streaming-Variante**: dieselbe Simulation mit `StreamingEnabled = true` (Absicherung für importierte Places).
+7. **Import-Test** (`tools/test/import_test.luau`): frischer Place mit Baseplate → Modell einfügen → Installer
+   ausführen → Struktur und Einstellungen prüfen → Spiel starten, Spieler beitreten, Solo-Rennen startet.
+   **17 von 17 Prüfungen bestanden.**
+8. **Build** von `VelocityRush.rbxl`, `VelocityRush.rbxlx` und `VelocityRush_Import.rbxm` mit Rojo.
 
 Voraussetzungen zum erneuten Ausführen: Rust (`cargo`), Python 3, `cargo install rojo selene`.
 
@@ -468,7 +503,8 @@ Der Quelltext liegt unter `src/` und ist ein [Rojo](https://rojo.space)-Projekt 
 
 ```bash
 cargo install rojo                     # oder per Aftman/Rokit
-rojo build default.project.json -o build/VelocityRush.rbxlx   # Place-Datei bauen
+rojo build default.project.json -o build/VelocityRush.rbxl          # Place-Datei bauen
+rojo build import.project.json -o build/VelocityRush_Import.rbxm    # Import-Modell bauen
 rojo serve                             # Live-Sync mit dem Rojo-Studio-Plugin
 ./tools/run_tests.sh                   # alle Prüfungen + Build
 ```

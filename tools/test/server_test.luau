@@ -20,6 +20,7 @@ local TREE = __args[2]
 local env = setmetatable({}, { __index = _G })
 local Mock = __compile(__readfile(ROOT .. "/tools/test/mock.luau"), "mock", env)()
 Mock.Verbose = __args[3] == "-v"
+
 Mock.IsStudio = false
 local CFrame = Mock.CFrame
 
@@ -36,6 +37,11 @@ end
 
 local tree = __compile(__readfile(TREE), "tree", env)()
 Mock.BuildTree(tree)
+if __args[3] == "--streaming" then
+	-- Variante: Place mit aktivem StreamingEnabled (z. B. nach Import in einen bestehenden Place)
+	Mock.Workspace.StreamingEnabled = true
+	print("(Variante mit StreamingEnabled = true)")
+end
 
 local Services = Mock.Services
 local function serverModule(name)

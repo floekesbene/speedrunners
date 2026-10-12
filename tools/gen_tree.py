@@ -58,8 +58,10 @@ def emit(n, indent=""):
     parts.append(f"{indent}}} }}")
     return "".join(parts)
 
-project = json.loads((ROOT / "default.project.json").read_text())
-tree = node("game", project["tree"])
+project_file = sys.argv[2] if len(sys.argv) > 2 else "default.project.json"
+project = json.loads((ROOT / project_file).read_text())
+root_class = project["tree"].get("$className", "Folder")
+tree = node("game" if root_class == "DataModel" else project["name"], project["tree"])
 out = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "tools/test/_tree.luau"
 out.write_text("return " + emit(tree) + "\n")
 print("tree written to", out)

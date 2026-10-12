@@ -68,6 +68,13 @@ function CharacterService:Init(services)
 	pcall(function()
 		StarterPlayer.LoadCharacterAppearance = false
 	end)
+	local okStreaming, streaming = pcall(function()
+		return workspace.StreamingEnabled
+	end)
+	self.Streaming = okStreaming and streaming == true
+	if self.Streaming then
+		warn("[CharacterService] Workspace.StreamingEnabled ist aktiv. Velocity Rush funktioniert, empfohlen ist aber StreamingEnabled = false (Workspace-Eigenschaften).")
+	end
 
 	local existing = StarterPlayer:FindFirstChild("StarterCharacter")
 	if existing then
@@ -305,6 +312,14 @@ function CharacterService:Teleport(player: Player, cframe: CFrame): boolean
 	self.Services.AntiExploitService:GrantGrace(player, Config.AntiExploit.TeleportGrace)
 	self.Services.GrappleService:Release(player, true)
 	character:SetAttribute("Emote", "")
+	if self.Streaming then
+		-- Zielbereich vorab zum Client streamen (blockiert den Aufrufer nicht)
+		task.spawn(function()
+			pcall(function()
+				player:RequestStreamAroundAsync(cframe.Position, 3)
+			end)
+		end)
+	end
 	character:PivotTo(cframe)
 	root.AssemblyLinearVelocity = Vector3.zero
 	Remotes.GameEvent:FireClient(player, "Teleported", { Position = cframe.Position })
