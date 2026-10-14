@@ -47,5 +47,10 @@ return function(B)
 	B:Steps(4, -4, 10)
 	B:Flat(30)
 	B:Finish(80)
+	-- Optik (rein dekorativ): Säulentore und ein riesiger Ruinenbogen auf einer Insel
+	B:Gates(2, B.Theme.Accent, { FrameColor = Color3.fromRGB(236, 230, 216), Material = Enum.Material.Marble })
 	B:Decorate()
+	local islandX = (B.MinX + B.MaxX) * 0.45
+	local top = B:Island(islandX, 30, -150, 40)
+	B:Prop("RuinArch", islandX, top - 0.5, -150, { Scale = 2.2 })
 end

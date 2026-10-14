@@ -48,5 +48,7 @@ return function(B)
 	B:WallClimb(18, 14)
 	B:Flat(30)
 	B:Finish(80)
+	-- Optik (rein dekorativ): Eistore
+	B:Gates(3, B.Theme.Accent, { FrameColor = Color3.fromRGB(196, 228, 250), Material = Enum.Material.Ice })
 	B:Decorate()
 end

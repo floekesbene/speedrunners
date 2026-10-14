@@ -54,5 +54,9 @@ return function(B)
 	B:GrappleGap(B:D(60), { AnchorHeight = 22 })
 	B:Flat(30)
 	B:Finish(80)
+	-- Optik (rein dekorativ): Neon-Torbögen und ein Wolkenkratzer als Wahrzeichen
+	B:Gates(3)
 	B:Decorate()
+	B:Prop("Tower", (B.MinX + B.MaxX) * 0.55, B.MinY - 60, -112, { Scale = 1.1 })
+	B:Prop("Tower", B.MinX + (B.MaxX - B.MinX) * 0.12, B.MinY - 60, -118, { Scale = 0.85 })
 end

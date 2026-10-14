@@ -211,21 +211,39 @@ Config.RateLimits = {
 	GetLeaderboard = { 4, 0.5 },
 }
 
+-- Seitenkamera (CameraController). Glättung über "SmoothTime" (Sekunden bis
+-- das Ziel weitgehend erreicht ist; kleiner = straffer).
 Config.Camera = {
-	Distance = 58,
-	HeightOffset = 5,
-	FocusHeight = 3,
-	FieldOfView = 60,
-	LookAheadFactor = 0.32,
-	MaxLookAhead = 18,
-	FollowSharpness = 9,
-	VerticalSharpness = 5,
-	VerticalDeadZone = 3,
-	SpeedZoom = 0.22,
-	MaxExtraDistance = 22,
+	Distance = 45, -- Abstand zur Spielebene (näher = größere Figuren)
+	HeightOffset = 7, -- Kamera so viel höher als der Fokus (Blick leicht von oben)
+	FocusHeight = 2.2, -- Fokuspunkt über der Körpermitte
+	FieldOfView = 57,
+	LookAheadFactor = 0.3, -- Vorausschau in Laufrichtung pro Stud/s
+	MaxLookAhead = 16,
+	LookAheadSmoothTime = 0.42,
+	FollowSmoothTime = 0.085, -- horizontale Nachführung
+	VerticalSmoothTime = 0.2,
+	FallSmoothTime = 0.07, -- schnelles Nachführen beim Fallen
+	VerticalDeadZone = 2.5,
+	GroundRecenter = 1.6, -- Schärfe, mit der die Kamera am Boden wieder mittig wird
+	FallLookDown = 0.08, -- Blick nach unten beim schnellen Fallen (pro Stud/s)
+	MaxFallLookDown = 6,
+	SpeedZoom = 0.18, -- zusätzlicher Abstand pro Stud/s über MaxRunSpeed
+	MaxExtraDistance = 13,
+	ZoomSharpness = 1.8,
+	SpeedFov = 0.11, -- zusätzliches Sichtfeld pro Stud/s über MaxRunSpeed
+	MaxExtraFov = 7,
+	FovSharpness = 3.5,
 	LeaderBias = 0.25,
-	MaxLeaderBias = 22,
+	MaxLeaderBias = 18,
 	SnapDistance = 120,
+	SpectateBlendTime = 0.55, -- weicher Schwenk beim Wechsel des Zuschauerziels
+	MaxBlendDistance = 700,
+	ShakeFrequency = 17,
+	ShakeDecay = 2.6,
+	KickStiffness = 170, -- Feder für Kamera-Stöße (Landung)
+	KickDamping = 15,
+	MaxFovPunch = 10,
 }
 
 Config.Input = {

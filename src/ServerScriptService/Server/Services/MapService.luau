@@ -11,7 +11,9 @@
 
 	Jede Region ist eine MapInstance (siehe MapBuilder:Result()). Beim Laden
 	werden Greifhaken-Anker und Item-Boxen bei den zuständigen Services
-	registriert, beim Entladen wieder entfernt.
+	registriert, beim Entladen wieder entfernt. Das Hintergrund-Terrain einer
+	Region (MapInstance.TerrainFills) wird beim Entladen gelöscht, indem jede
+	aufgezeichnete Füllung leicht vergrößert mit Luft überschrieben wird.
 
 	Öffentliche API:
 		:GetRegion(regionId) -> MapInstance?
@@ -36,6 +38,8 @@ local MapDefinitions = require(Shared.MapDefinitions)
 local MapBuilder = require(script.Parent.Parent.Modules.MapBuilder)
 
 local MapService = {}
+
+local TERRAIN_ERASE_MARGIN = 4 -- eine Voxelbreite Reserve beim Löschen
 
 function MapService:Init(services)
 	self.Services = services
@@ -107,8 +111,37 @@ function MapService:_destroyRegion(regionId: string)
 	self.Services.GrappleService:UnregisterRegion(regionId)
 	self.Services.PowerUpService:UnregisterRegion(regionId)
 	self.Regions[regionId] = nil
+	self:_eraseTerrain(instance)
 	instance.Model:Destroy()
 	self:_rebuildOverlap()
+end
+
+--- Löscht das Terrain einer Region: jede aufgezeichnete Füllung wird leicht
+--- vergrößert mit Luft gefüllt (Keile über ihren umschließenden Quader).
+function MapService:_eraseTerrain(instance)
+	local fills = instance.TerrainFills
+	if not fills or #fills == 0 then
+		return
+	end
+	local terrain = workspace.Terrain
+	local air = Enum.Material.Air
+	local margin = TERRAIN_ERASE_MARGIN
+	local grow = Vector3.new(margin * 2, margin * 2, margin * 2)
+	for _, fill in fills do
+		local ok, err = pcall(function()
+			if fill.Kind == "Ball" then
+				terrain:FillBall(fill.Center, fill.Radius + margin, air)
+			elseif fill.Kind == "Cylinder" then
+				terrain:FillCylinder(fill.CFrame, fill.Height + margin * 2, fill.Radius + margin, air)
+			else
+				terrain:FillBlock(fill.CFrame, fill.Size + grow, air)
+			end
+		end)
+		if not ok then
+			warn("[MapService] Terrain konnte nicht gelöscht werden: " .. tostring(err))
+		end
+	end
+	instance.TerrainFills = {}
 end
 
 function MapService:_rebuildOverlap()

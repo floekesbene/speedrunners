@@ -15,7 +15,10 @@
 		- Greifhaken-Lücken 40–80 Studs, Anker ca. 22–26 Studs über dem Boden.
 		- Alle ~140 Studs wird automatisch ein Checkpoint gesetzt.
 		- Immer mit B:Start() beginnen und mit B:Finish() enden.
-		- Zum Schluss B:Decorate() für den Hintergrund aufrufen.
+		- Zum Schluss B:Decorate() für Bodenverzierung und Hintergrund aufrufen.
+		- Optik ist rein dekorativ: vor B:Decorate() z.B. B:Gates(2) für Torbögen,
+		  danach Wahrzeichen wie B:Prop("Tower", x, B.MinY - 60, -110). Weitere
+		  Deko- und Terrain-Bausteine stehen in der MapBuilder-Doku.
 
 	Diese Vorlage wird vom Spiel nicht geladen (kein Eintrag in MapDefinitions).
 ]]
@@ -47,5 +50,7 @@ return function(B)
 	B:TimedBarrier(36, { Period = 2.4, OnTime = 1.0 })
 	B:Flat(30)
 	B:Finish(80)
+	-- Optik (rein dekorativ)
+	B:Gates(2)
 	B:Decorate()
 end

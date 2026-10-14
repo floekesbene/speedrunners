@@ -8,13 +8,17 @@
 	Struktur (zur Laufzeit in PlayerGui):
 		VelocityRushUI (ScreenGui)
 		└── Root (Frame, UIScale auf Referenz 1280×720)
-		    ├── TopBar          Level, XP, Coins, Rang
-		    ├── LobbyMenu       Hauptmenü / Lobby / Warteschlange / Training-Leiste
+		    ├── TopBar          Level-Ring, XP, Rang-Chip (+ Coins-Anzeige mit Shop-Abkürzung)
+		    ├── LobbyMenu       Spielen-Karte (Modus + Warteschlange), Kachel-Menü, Status-Karte
 		    ├── RaceHud         Countdown, Timer, Platzierungen, Gefahr, Items, Cooldowns
 		    ├── TouchControls   Mobile Buttons
-		    ├── Notifications   Hinweise
+		    ├── Notifications   Hinweise (Toasts mit Symbol)
 		    └── Modale: Results, Shop/Inventar (Catalog), Stats, Leaderboard,
 		                Settings, Practice
+
+	Stil und Bausteine kommen aus Theme und Components (Verlaufs-Buttons,
+	Glas-Panels, Schatten, Symbole). Klick- und Hover-Sounds werden hier
+	über Components.ClickCallback / HoverCallback angebunden.
 
 	API:
 		:RegisterModal(name, modal)
@@ -25,6 +29,7 @@
 
 local Players = game:GetService("Players")
 local StarterGui = game:GetService("StarterGui")
+local UserInputService = game:GetService("UserInputService")
 
 local Components = require(script.Parent.Components)
 local Theme = require(script.Parent.Theme)
@@ -77,6 +82,13 @@ function UIController:Init(ctx)
 		local audio = ctx.AudioController
 		if audio then
 			audio:Play("Click")
+		end
+	end
+	-- Leises, hohes Ticken beim Überfahren von Buttons (nur Maus, nicht bei Touch-Taps)
+	Components.HoverCallback = function()
+		local audio = ctx.AudioController
+		if audio and UserInputService:GetLastInputType() == Enum.UserInputType.MouseMovement then
+			audio:Play("Click", { Volume = 0.08, Pitch = 4 })
 		end
 	end
 

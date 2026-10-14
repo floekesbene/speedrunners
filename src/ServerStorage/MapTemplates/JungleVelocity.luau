@@ -62,5 +62,8 @@ return function(B)
 	B:GrappleGap(B:D(64), { Anchors = 2, AnchorHeight = 24 })
 	B:Flat(30)
 	B:Finish(80)
+	-- Optik (rein dekorativ): Holztore und ein Dschungeltempel am anderen Flussufer
+	B:Gates(2, B.Theme.Accent2, { FrameColor = Color3.fromRGB(110, 78, 50), Material = Enum.Material.Wood })
 	B:Decorate()
+	B:Prop("Temple", (B.MinX + B.MaxX) * 0.6, B.MinY - 33, -205, { Scale = 2.2 })
 end

@@ -44,5 +44,7 @@ return function(B)
 	B:Sign(B.X - 10, B.Y + 13, "GEFAHRENZONE", "Im Rennen jagt dich eine Energiewand – bleib vorn!")
 	B:Flat(30)
 	B:Finish(60)
+	-- Optik (rein dekorativ): Trainingstore
+	B:Gates(2, B.Theme.Accent2)
 	B:Decorate()
 end

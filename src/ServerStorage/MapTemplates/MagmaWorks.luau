@@ -52,5 +52,7 @@ return function(B)
 	B:GrappleGap(B:D(58), { AnchorHeight = 24 })
 	B:Flat(30)
 	B:Finish(80)
+	-- Optik (rein dekorativ): Werkstore in Warnfarbe
+	B:Gates(3, B.Theme.Accent2, { FrameColor = Color3.fromRGB(70, 56, 50), Material = Enum.Material.CorrodedMetal })
 	B:Decorate()
 end
